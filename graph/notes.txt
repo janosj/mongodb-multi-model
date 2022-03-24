@@ -1,0 +1,42 @@
+Source of this dataset was:
+https://snap.stanford.edu/data/ca-GrQc.html
+https://snap.stanford.edu/data/
+
+Original dataset was only a list of edges (node1, node2)
+5242 Nodes
+14496 Edges
+A directed graph (each unordered pair of nodes is saved once): CA-GrQc.txt
+Collaboration network of Arxiv General Relativity category (there is an edge if authors coauthored at least one paper)
+
+I added additional person details to the records,
+and collapsed all edges for a node into a single "collaborators" array.
+
+*** FINAL ENRICHED DATA SET CAN NOW BE LOADED VIA MONGOIMPORT  ***
+*** These data modification scripts below are no longer needed ***
+
+Step 1: dataset-original.txt
+
+Step1: dataset-tweaked.txt
+Removed the header row
+Replaced delimiter with a single space
+
+Step 2: genPeopleDetails.sh
+Generates 5500 fake person records to enrich the network data.
+Generated data according to the format specified in personDetailsTemplate-basic.json
+personDetailsTemplate-fancy was taken from a POV, was called owners.json, something about owners and pets.
+
+Step 3: Build the enriched data set.
+Right now this script inserts the records into the database.
+TO DO: generate the enriched data set for future use.
+
+Step 4: runGraphLookup.js
+
+To view the output, look for an array with only one collaborator:
+{ collaborators: {$size:1} }
+Person 21194 is a good example.  Roger Shaw.
+He has 1 collaborator. 16258.
+In a second tab, we see that 16258 is Tommy Sbolci with 13 collaborators.
+Going back to tab 1, look at the graph output and see there are 14 elements.
+One of those elements has depth 0, and that is Tommy Sbolci.
+The other 13 correspond to Tommy's collaborators.
+Strangely, he does not show up as the first element.
